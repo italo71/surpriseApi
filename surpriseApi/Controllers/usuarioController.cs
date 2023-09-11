@@ -4,6 +4,7 @@ using surpriseApi.Data;
 using surpriseApi.Data.Dtos;
 using surpriseApi.Models;
 
+
 namespace surpriseApi.Controllers;
 
 [ApiController]
@@ -19,21 +20,30 @@ public class usuarioController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost]
+    [HttpPost("cadastro")]
     public IActionResult cadastrarUsuario([FromBody] CreateUsuarioDto usuario)
     {
-        usuario usu = _mapper.Map<usuario>(usuario);
-        _context.usuarios.Add(usu);
-        _context.SaveChanges();
-        return CreatedAtAction(nameof(obterUsuario), new { id = usu.id }, usu);
+        Usuario usu = _mapper.Map<Usuario>(usuario);
+        usu.DefinirSenha(usu.senha);
+        var usuCad = _context.Usuarios.FirstOrDefault(usuCadastrado => usuCadastrado.login == usu.login);
+        if (usuCad == null)
+        {
+            _context.Usuarios.Add(usu);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(obterUsuario), new { id = usu.id }, usu);
+        }
+        else return Conflict(new Retorno { status = "erro", message = "Usuario ja cadastrado" });
     }
 
-    [HttpGet("{id}")]
-    public IActionResult obterUsuario([FromQuery] int id)
+    [HttpPost("login")]
+    public IActionResult obterUsuario([FromBody] UsuarioParaValidar usu)
     {
-        var usuario = _context.usuarios.FirstOrDefault(usuario => usuario.id == id);
-        if(usuario == null) return NotFound();
-        return Ok(usuario);
+        var usuario = _context.Usuarios.FirstOrDefault(usuario => (usuario.login == usu.login || usuario.email == usu.email));
+        if (usuario == null) return NotFound();
+        Usuario usuarioSelect = _mapper.Map<Usuario>(usuario);
+        if (usuarioSelect.VerificarSenha(usu.senha))
+            return Ok(_mapper.Map<RetornaUsuarioDto>(usuario));
+        else return Unauthorized();
     }
 
 }

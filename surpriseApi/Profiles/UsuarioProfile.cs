@@ -8,7 +8,10 @@ public class UsuarioProfile : Profile
 {
     public UsuarioProfile()
     {
-        CreateMap<usuario, CreateUsuarioDto>();
-        CreateMap<CreateUsuarioDto, usuario>();
+        CreateMap<Usuario, CreateUsuarioDto>();
+        CreateMap<CreateUsuarioDto, Usuario>();
+        CreateMap<Usuario, RetornaUsuarioDto>();
+        CreateMap<RetornaUsuarioDto, Usuario>();
+        CreateMap<CreateUsuarioDto, RetornaUsuarioDto>();
     }
 }

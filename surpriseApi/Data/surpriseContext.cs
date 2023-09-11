@@ -9,6 +9,6 @@ public class surpriseContext :DbContext
         
     }
 
-    public DbSet<usuario> usuarios { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
 
 }
