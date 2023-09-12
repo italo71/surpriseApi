@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using surpriseApi.Data;
-using surpriseApi.Data.Dtos;
+using surpriseApi.Data.Dtos.usuario;
 using surpriseApi.Models;
 
 
@@ -38,7 +38,7 @@ public class usuarioController : ControllerBase
     [HttpPost("login")]
     public IActionResult obterUsuario([FromBody] UsuarioParaValidar usu)
     {
-        var usuario = _context.Usuarios.FirstOrDefault(usuario => (usuario.login == usu.login || usuario.email == usu.email));
+        var usuario = _context.Usuarios.FirstOrDefault(usuario => usuario.login == usu.login);
         if (usuario == null) return NotFound();
         Usuario usuarioSelect = _mapper.Map<Usuario>(usuario);
         if (usuarioSelect.VerificarSenha(usu.senha))

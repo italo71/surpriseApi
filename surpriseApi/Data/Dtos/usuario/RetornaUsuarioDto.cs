@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace surpriseApi.Data.Dtos;
+namespace surpriseApi.Data.Dtos.usuario;
 
 public class RetornaUsuarioDto
 {

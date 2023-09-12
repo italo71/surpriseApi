@@ -1,4 +1,4 @@
-﻿namespace surpriseApi.Data.Dtos;
+﻿namespace surpriseApi.Data.Dtos.usuario;
 
 public class UsuarioParaValidar
 {

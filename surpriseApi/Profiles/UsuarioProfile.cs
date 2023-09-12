@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using surpriseApi.Data.Dtos;
+using surpriseApi.Data.Dtos.usuario;
 using surpriseApi.Models;
 
 namespace surpriseApi.Profiles;
