@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using surpriseApi.Data;
+using surpriseApi.Data.Dtos.nivel;
 using surpriseApi.Data.Dtos.usuario;
 using surpriseApi.Models;
 

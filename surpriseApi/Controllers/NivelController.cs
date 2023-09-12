@@ -45,8 +45,18 @@ public class NivelController : ControllerBase
     {
         //var nivelBusca = _context.Niveis.FirstOrDefault(niv => id_usuario.id_usuario == niv.id_usuario);
         var nivelBusca = _context.Niveis.Where(nive => nive.id_usuario == id_usu.id_usuario).OrderByDescending(n => n.id).FirstOrDefault();
-        if (nivelBusca == null) return NotFound();
+        if (nivelBusca == null) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado" });
         Nivel nivel = _mapper.Map<Nivel>(nivelBusca);
         return Ok(nivel);
+    }
+
+    [HttpPut("atualizar")]
+    public IActionResult atualizarNivel([FromBody] PutNivelDto putNivel)
+    {
+        var nivelFinded = _context.Niveis.FirstOrDefault(n => n.id == putNivel.id);
+        if(nivelFinded == null) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado"});
+        _mapper.Map(putNivel, nivelFinded);
+        _context.SaveChanges();
+        return NoContent();
     }
 }

@@ -10,6 +10,7 @@ public class NivelProfile : Profile
         CreateMap<Nivel, CreateNivelDto>();
         CreateMap<CreateNivelDto, Nivel>();
         CreateMap<Nivel, RetornaNivelDto>();
+        CreateMap<PutNivelDto, Nivel>();
     }
 
 }
