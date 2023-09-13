@@ -43,7 +43,6 @@ public class NivelController : ControllerBase
     [HttpPost("obter")]
     public IActionResult obterNivel([FromBody] ObterNivelDto id_usu)
     {
-        //var nivelBusca = _context.Niveis.FirstOrDefault(niv => id_usuario.id_usuario == niv.id_usuario);
         var nivelBusca = _context.Niveis.Where(nive => nive.id_usuario == id_usu.id_usuario).OrderByDescending(n => n.id).FirstOrDefault();
         if (nivelBusca == null) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado" });
         Nivel nivel = _mapper.Map<Nivel>(nivelBusca);
