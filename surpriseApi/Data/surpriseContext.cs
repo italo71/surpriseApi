@@ -11,5 +11,5 @@ public class surpriseContext :DbContext
 
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Nivel> Niveis { get; set; }
-
+    public DbSet<Token> Tokens { get; set; }
 }

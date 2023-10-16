@@ -44,7 +44,25 @@ public class usuarioController : ControllerBase
         if (usuario == null) return NotFound();
         Usuario usuarioSelect = _mapper.Map<Usuario>(usuario);
         if (usuarioSelect.VerificarSenha(usu.senha))
-            return Ok(_mapper.Map<RetornaUsuarioDto>(usuario));
+        {
+            Guid guid = Guid.NewGuid();
+            RetornaUsuarioDto usuRetorno = _mapper.Map<RetornaUsuarioDto>(usuario);
+            usuRetorno.token = guid.ToString();
+            Token tokenAutenticado = new Token();
+            var _token = _context.Tokens.FirstOrDefault(token => token.id_usuario == usuarioSelect.id);
+            if (_token == null)
+            {
+                _context.Tokens.Add(tokenAutenticado);
+                _context.SaveChanges();
+            }
+            else
+            {
+                tokenAutenticado = _token;
+                _token.token = guid.ToString();
+                _context.SaveChanges();
+            }
+            return Ok(tokenAutenticado);
+        }
         else return Unauthorized();
     }
 
