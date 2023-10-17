@@ -16,6 +16,10 @@ public class Usuario
     
     public string? email { get; set; }
 
+    public virtual Token token { get; set; }
+
+    public virtual List<Nivel> nivel { get; set; }
+
     public void DefinirSenha(string senha)
     {
         this.senha = BCrypt.Net.BCrypt.HashPassword(senha, BCrypt.Net.BCrypt.GenerateSalt());

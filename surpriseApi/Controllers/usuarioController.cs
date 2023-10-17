@@ -47,21 +47,24 @@ public class usuarioController : ControllerBase
         {
             Guid guid = Guid.NewGuid();
             RetornaUsuarioDto usuRetorno = _mapper.Map<RetornaUsuarioDto>(usuario);
-            usuRetorno.token = guid.ToString();
-            Token tokenAutenticado = new Token();
-            var _token = _context.Tokens.FirstOrDefault(token => token.id_usuario == usuarioSelect.id);
-            if (_token == null)
+            Token tokenAutenticado = usuario.token;
+            if (tokenAutenticado == null)
             {
+                tokenAutenticado = new Token();
+                tokenAutenticado.Usuarioid = usuario.id;
+                tokenAutenticado.token = guid.ToString();
                 _context.Tokens.Add(tokenAutenticado);
                 _context.SaveChanges();
             }
             else
             {
-                tokenAutenticado = _token;
-                _token.token = guid.ToString();
+                tokenAutenticado.token = guid.ToString();
                 _context.SaveChanges();
             }
-            return Ok(tokenAutenticado);
+            
+            DadosLoginDto dadosRetorno = _mapper.Map<DadosLoginDto>(usuarioSelect);
+            RetornoLoginDto retorno = _mapper.Map<RetornoLoginDto>(dadosRetorno);
+            return Ok(retorno);
         }
         else return Unauthorized();
     }

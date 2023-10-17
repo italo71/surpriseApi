@@ -25,14 +25,14 @@ public class NivelController : ControllerBase
         Nivel nive = _mapper.Map<Nivel>(nivel);
         try
         {
-            var usu = _context.Usuarios.FirstOrDefault(x => x.id == nive.id_usuario);
+            var usu = _context.Usuarios.FirstOrDefault(x => x.id == nive.Usuarioid);
             if (usu == null)
             {
-                return BadRequest(new Retorno { code = 404, status = "erro", message = "Usuário não encontrado"});
+                return BadRequest(new Retorno { code = 404, status = "erro", message = "Usuário não encontrado" });
             }
             _context.Niveis.Add(nive);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(obterNivel), new { id_usuario = nive }, nive);
+            return CreatedAtAction(nameof(obterNivel), new { Usuarioid = nive }, nive);
         }
         catch (Exception ex)
         {
@@ -43,17 +43,32 @@ public class NivelController : ControllerBase
     [HttpPost("obter")]
     public IActionResult obterNivel([FromBody] ObterNivelDto id_usu)
     {
-        var nivelBusca = _context.Niveis.Where(nive => nive.id_usuario == id_usu.id_usuario).OrderByDescending(n => n.id).FirstOrDefault();
+        var nivelBusca = _context.Niveis.Where(nive => nive.Usuarioid == id_usu.Usuarioid).OrderByDescending(n => n.id).FirstOrDefault();
         if (nivelBusca == null) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado" });
-        Nivel nivel = _mapper.Map<Nivel>(nivelBusca);
+        RetornaNivelDto nivel = _mapper.Map<RetornaNivelDto>(nivelBusca);
         return Ok(nivel);
+    }
+    [HttpPost("obterall")]
+    public IActionResult obterTodosNiveis([FromBody] ObterNivelDto id_usu)
+    {
+        try
+        {
+            List<Nivel> nivelBusca = _context.Niveis.Where(nive => nive.Usuarioid == id_usu.Usuarioid).ToList();
+            if (nivelBusca == null || nivelBusca.Count <= 0) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado" });
+            else
+            {
+                List<RetornaNivelDto> dadosRetorno = _mapper.Map<List<RetornaNivelDto>>(nivelBusca);
+                return Ok(dadosRetorno);
+            }
+        }
+        catch { return BadRequest(); }
     }
 
     [HttpPut("atualizar")]
     public IActionResult atualizarNivel([FromBody] PutNivelDto putNivel)
     {
         var nivelFinded = _context.Niveis.FirstOrDefault(n => n.id == putNivel.id);
-        if(nivelFinded == null) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado"});
+        if (nivelFinded == null) return NotFound(new Retorno { code = 404, status = "erro", message = "Nivel não encontrado" });
         _mapper.Map(putNivel, nivelFinded);
         _context.SaveChanges();
         return NoContent();
